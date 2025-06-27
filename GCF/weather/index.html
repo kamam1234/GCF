@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        html{
+            background-color: rgb(204, 255, 238);
+            font-family:Arial, Helvetica, sans-serif;
+        }
+        .input{
+            text-align: center;
+            display: block;
+            margin: 10px auto;
+        }
+        h1{
+            margin-top: 80px;
+            text-align: center;
+        }
+        input{
+            margin: 10px auto;
+            padding: 10px;
+            font-size: 0.81rem;
+        }
+        #submit{
+            margin: 10px auto;
+            padding: 9px;
+            font-size: 1rem;
+        }
+        .output{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather App <img src="https://img.icons8.com/?size=40&id=zIVmoh4T8wh7&format=png&color=000000" alt="" srcset=""></h1>
+    <div class="input">
+        <input type="text" id="city" height="50px" placeholder="Enter City Name">
+        <button id ="submit">Submit</button>
+    </div>
+    <div class="output"></div>
+</body>
+</html>
+
+    <script>
+        let city = document.getElementById("city");
+        let submit = document.getElementById("submit");
+        let output = document.querySelector(".output");
+
+        submit.addEventListener("click", function(){
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city.value}&appid=2d8b9e4c1d8e4a4b1d8b9e4c1d8e4a4b`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                let temp = Math.floor(data.main.temp - 273.15);
+                let min = Math.floor(data.main.temp_min - 273.15);
+                let max = Math.floor(data.main.temp_max - 273.15);
+                let pressure = data.main.pressure;
+                let humidity = data.main.humidity;
+                let wind = data.wind.speed;
+                let country = data.sys.country;
+                let weather = data.weather[0].main;
+                let icon = data.weather[0].icon;
+                let iconurl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+                output.innerHTML = `
+                <div class="weather-box">
+                    <img src="${iconurl}" alt="Weather Icon">
+                    <h2>${city.value}</h2>
+                    <p>Country: ${country}</p>
+                    <p>Temperature: ${temp}°C</p>
+                    <p>Min Temperature: ${min}°C</p>
+                    <p>Max Temperature: ${max}°C</p>
+                    <p>Pressure: ${pressure}</p>
+                    <p>Humidity: ${humidity}</p>
+                    <p>Wind: ${wind}</p>
+                    <p>Weather: ${weather}</p>
+                </div>
+                `;
+            })
+            .catch(err => alert("Invalid City Name"));
+            })
+            
+    </script>
